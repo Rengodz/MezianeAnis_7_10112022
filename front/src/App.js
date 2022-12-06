@@ -1,9 +1,9 @@
-import Register from './Register'
+import TopicList from './components/TopicList'
 
 function App() {
   return (
     <main className="App">
-      <Register />
+      <TopicList />
     </main>
   );
 }
