@@ -1,13 +1,14 @@
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { axios } from './api/axios';
+import axios from 'axios';
 
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const USER_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = '/register';
+const REGISTER_URL = '/localhost:5000/api/auth/signup';
 
 const Register = () => {
+    
     const userRef = useRef();
     const errRef = useRef();
 
@@ -49,7 +50,7 @@ const Register = () => {
         const v1 = USER_REGEX.test(user);
         const v2 = PWD_REGEX.test(pwd);
         if (!v1 || !v2) {
-            setErrMsg("Invalid Entry");
+            setErrMsg("Entrée invalide");
             return;
         }
         try {
@@ -73,9 +74,9 @@ const Register = () => {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response?.status === 409) {
-                setErrMsg('Username Taken');
+                setErrMsg('Utilisateur déja existant');
             } else {
-                setErrMsg('Registration Failed')
+                setErrMsg('Enregistrement echoué')
             }
             errRef.current.focus();
         }
@@ -96,7 +97,7 @@ const Register = () => {
                     <h1>Groupomania</h1>
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="username">
-                            Nom d'utilisateur:
+                            Email:
                             <FontAwesomeIcon icon={faCheck} className={validName ? "valid" : "hide"} />
                             <FontAwesomeIcon icon={faTimes} className={validName || !user ? "hide" : "invalid"} />
                         </label>
