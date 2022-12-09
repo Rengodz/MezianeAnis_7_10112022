@@ -1,5 +1,5 @@
 import TopicList from './components/TopicList'
-import Register from './Register';
+import Register from './components/Register';
 
 function App() {
   return (
