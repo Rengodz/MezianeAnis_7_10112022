@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const USER_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = '/localhost:5000/api/auth/signup';
+const REGISTER_URL = 'http://localhost:5000/api/auth/signup';
 
 const Register = () => {
     
@@ -72,7 +72,7 @@ const Register = () => {
             setMatchPwd('');
         } catch (err) {
             if (!err?.response) {
-                setErrMsg('No Server Response');
+                setErrMsg('Pas de reponse du serveur');
             } else if (err.response?.status === 409) {
                 setErrMsg('Utilisateur déja existant');
             } else {
