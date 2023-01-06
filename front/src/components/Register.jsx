@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import Login from "./Login";
 import axios from 'axios';
 
 const USER_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -88,7 +90,7 @@ const Register = () => {
                 <section>
                     <h1>Réussi!</h1>
                     <p>
-                        <a href="#">Sign In</a>
+                        <a href="login">Sign In</a>
                     </p>
                 </section>
             ) : (
@@ -117,8 +119,6 @@ const Register = () => {
                         <p id="uidnote" className={userFocus && password && !validName ? "instructions" : "offscreen"}>
                             <FontAwesomeIcon icon={faInfoCircle} />
                             4 a 24 caractères.<br />
-                            Doit commencer par une lettre.<br />
-                            Lettres, nombres, underscores, traits d'unions autorisés.
                         </p>
 
 
@@ -173,7 +173,9 @@ const Register = () => {
                         Vous avez déja un compte ?<br />
                         <span className="line">
                             {/*put router link here*/}
-                            <a href="#">Se connecter</a>
+                            <a href="login">Se connecter</a>
+
+
                         </span>
                     </p>
                 </section>

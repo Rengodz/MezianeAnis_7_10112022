@@ -1,13 +1,14 @@
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { browserHistory, Router, Route } from 'react-router-dom';
 import axios from 'axios';
 
 const USER_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = 'http://localhost:3000/api/auth/login';
+const LOGIN_URL = 'http://localhost:3000/api/auth/login';
 
-const Register = () => {
+const Login = () => {
     
     const userRef = useRef();
     const errRef = useRef();
@@ -31,10 +32,6 @@ const Register = () => {
         setValidName(USER_REGEX.test(email));
     }, [email])
 
-    useEffect(() => {
-        setValidPwd(PWD_REGEX.test(password));
-        setValidMatch(password === 'http://localhost:5000/api/auth/signup/password' );
-    }, [password, matchPwd])
 
     useEffect(() => {
         setErrMsg('');
@@ -42,15 +39,7 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // if button enabled with JS hack
-        const v1 = USER_REGEX.test(email);
-        const v2 = PWD_REGEX.test(password);
-        if (!v1 || !v2) {
-            setErrMsg("Entrée invalide");
-            return;
-        }
-        try {
-            const response = await axios.post(REGISTER_URL,
+            const response = await axios.post(LOGIN_URL,
                 JSON.stringify({ email, password }),
                 {
                     headers: { 'Content-Type': 'application/json' },
@@ -65,14 +54,7 @@ const Register = () => {
             //need value attrib on inputs for this
             setUser('');
             setPwd('');
-        } catch (err) {
-            if (!err?.response) {
-                setErrMsg('Pas de reponse du serveur');
-            } else {
-                setErrMsg('connexion echoué')
-            }
-            errRef.current.focus();
-        }
+        
     }
 
     return (
@@ -80,9 +62,6 @@ const Register = () => {
             {success ? (
                 <section>
                     <h1>Réussi!</h1>
-                    <p>
-                        <a href="#">Sign In</a>
-                    </p>
                 </section>
             ) : (
                 <section>
@@ -110,15 +89,12 @@ const Register = () => {
                         <p id="uidnote" className={userFocus && password && !validName ? "instructions" : "offscreen"}>
                             <FontAwesomeIcon icon={faInfoCircle} />
                             4 a 24 caractères.<br />
-                            Doit commencer par une lettre.<br />
-                            Lettres, nombres, underscores, traits d'unions autorisés.
                         </p>
 
 
                         <label htmlFor="password">
                             Mot de passe:
                             <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
-                            <FontAwesomeIcon icon={faTimes} className={validPwd || !password ? "hide" : "invalid"} />
                         </label>
                         <input
                             type="password"
@@ -131,13 +107,8 @@ const Register = () => {
                             onFocus={() => setPwdFocus(true)}
                             onBlur={() => setPwdFocus(false)}
                         />
-                        
-                        <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                            mot de passe incorrect, veuillez réessayer.
-                        </p>
 
-                        <button disabled={!validName || !validPwd || !validMatch ? true : false}>Se connecter</button>
+                        <button>Se connecter</button>
                     </form>
                 
                 </section>
@@ -146,4 +117,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default Login
