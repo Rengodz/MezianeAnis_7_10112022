@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const USER_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const LOGIN_URL = 'http://localhost:3000/api/auth/login';
+const LOGIN_URL = 'http://localhost:5000/api/auth/login';
 
 const Login = () => {
     
