@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { browserHistory, Router, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 const USER_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -46,9 +47,7 @@ const Login = () => {
                     withCredentials: true
                 }
             );
-            console.log(response?.data);
-            console.log(response?.accessToken);
-            console.log(JSON.stringify(response))
+            localStorage.setItem('accessToken', response?.data.token);
             setSuccess(true);
             //clear state and controlled inputs
             //need value attrib on inputs for this
@@ -61,17 +60,20 @@ const Login = () => {
         <>
             {success ? (
                 <section>
-                    <h1>Réussi!</h1>
+                    <h1>Réussi !</h1>
+                    <p>
+                        <a href="topic">Acceder aux topics</a>
+                    </p>
                 </section>
+                
+
             ) : (
                 <section>
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Groupomania</h1>
+                    <h1>Bienvenue</h1>
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="username">
                             Email:
-                            <FontAwesomeIcon icon={faCheck} className={validName ? "valid" : "hide"} />
-                            <FontAwesomeIcon icon={faTimes} className={validName || !email ? "hide" : "invalid"} />
                         </label>
                         <input
                             type="text"

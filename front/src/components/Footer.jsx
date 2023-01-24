@@ -3,12 +3,14 @@ import styled from 'styled-components'
 import colors from '../Utils/variables'
 
 const StyledFooter = styled.footer`
-    width: 100%;
+    width: 1200px;
+    max-width: calc(100% - 20px);
+    margin: 0 auto;
+    padding: 0 10px;
     height : 200px;
-    margin: auto;
     margin-top: 50px;
     bottom: 0;
-    background-color: ${colors.secondary};
+    background-color: #4E5166;
 `
 
 const StyledP = styled.p`

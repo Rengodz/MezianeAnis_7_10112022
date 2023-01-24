@@ -1,5 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+import { useEffect, useState } from "react";
+
+const TOPICS_URL = 'http://localhost:5000/api/topics';
+
+const accessToken = localStorage.getItem('accessToken');
+
+console.log(accessToken);
+
 
 
 export default class TopicList extends React.Component {
@@ -7,18 +15,17 @@ export default class TopicList extends React.Component {
     topics: []
   }
   
+  
   componentDidMount() {
-
-    const useToken = JSON.parse(sessionStorage.getItem('jwt'));
-    const token = useToken;
+  
     const instance = axios.create({
       baseURL: 'http://localhost:5000/api/',
       timeout: 1000,
-      headers: {'Authorization': 'Bearer '+token}
+      headers: {'Authorization': 'Bearer '+ accessToken}
     
     });
 
-    instance.get('/topics')
+    instance.get(TOPICS_URL)
     .then(response => {
       const topics = response.data;
       console.log(topics);
@@ -27,9 +34,10 @@ export default class TopicList extends React.Component {
 
   }
 
+
   render() {
     return (
-      <ul>
+      <ul className="toto">
         {
           this.state.topics
             .map(topic =>

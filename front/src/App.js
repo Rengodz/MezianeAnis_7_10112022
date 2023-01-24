@@ -13,6 +13,7 @@ function App() {
       <Routes>
       <Route path="/" element={<Register />}></Route>
       <Route path="login" element={<Login />}></Route>
+      <Route path="topic" element={<TopicList />}></Route>
       </Routes>
       <Footer />
       
