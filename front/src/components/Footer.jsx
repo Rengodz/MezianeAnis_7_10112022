@@ -3,8 +3,7 @@ import styled from 'styled-components'
 import colors from '../Utils/variables'
 
 const StyledFooter = styled.footer`
-    width: 1200px;
-    max-width: calc(100% - 20px);
+    width: 100%;
     margin: 0 auto;
     padding: 0 10px;
     height : 200px;
