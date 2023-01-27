@@ -45,7 +45,12 @@ export default function Header() {
             <nav>
                 <StyledLink style={ location.pathname === '/' ? {textDecoration: 'none'}: {textDecoration: 'none'}} to="/">Accueil<img className='homeicn' src={homeIcon} /></StyledLink>
 				<StyledLink style={ location.pathname === '/profile' ? {textDecoration: 'none'}: {textDecoration: 'none'}} to="/profile">Profil<img className='usericn' src={userIcon} /></StyledLink>
-				<StyledLink style={ location.pathname === '/logout' ? {textDecoration: 'none'}: {textDecoration: 'none'}} to="/logout">Se deconnecter<img className='logicn' src={logoutIcon} /></StyledLink>
+				<StyledLink style={ location.pathname === '/logout' ? {textDecoration: 'none'}: {textDecoration: 'none'}} to="/login" onClick={() => {
+					console.log(
+						'logging out'
+					)
+					localStorage.clear();
+				}}>Se deconnecter<img className='logicn' src={logoutIcon} /></StyledLink>
             </nav>
         </StyledHeader>
     )
