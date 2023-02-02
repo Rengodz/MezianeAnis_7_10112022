@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Share from './Share';
 import { useEffect, useState } from "react";
 
 const TOPICS_URL = 'http://localhost:5000/api/topics';
@@ -38,6 +39,7 @@ export default class TopicList extends React.Component {
   render() {
     return (
       <ul className="toto">
+        <Share/>
         {
           this.state.topics
             .map(topic =>

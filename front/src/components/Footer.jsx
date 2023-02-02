@@ -23,7 +23,7 @@ const StyledP = styled.p`
 export default function Footer() {
     return (
         <StyledFooter>
-            <StyledP >© 2020 Groupomania. All rights reserved</StyledP >
+            <StyledP >© 2023 Groupomania. All rights reserved</StyledP >
         </StyledFooter>
     )
 }
