@@ -3,17 +3,19 @@ import axios from "axios";
 import "./Share.css";
 
 const userImg = require('./fleur.jpg');
+const accessToken = localStorage.getItem('accessToken');
+
 const POST_URL = 'http://localhost:5000/api/topics';
 const handleSubmit = async (e) => {
     e.preventDefault();
         const response = await axios.post(POST_URL,
-            JSON.stringify({  }),
+            JSON.stringify({ }),
             {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer '+ accessToken },
                 withCredentials: true
             }
         );
-        localStorage.setItem('accessToken', response?.data.token);
+        
     
 }
 
@@ -23,10 +25,13 @@ export default function Share() {
         <div className="shareWrapper">
           <div className="shareTop">
             <img className="shareProfileImg" src={userImg} alt="" />
-            <input
+            
+            <form onSubmit={handleSubmit}>
+            <input 
               placeholder="Que voulez vous exprimer ?"
               className="shareInput"
             />
+            </form>
           </div>
           <hr className="shareHr"/>
           <div className="shareBottom">
