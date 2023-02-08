@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Share from './Share';
+import Post from './Post';
 import { useEffect, useState } from "react";
 
 const TOPICS_URL = 'http://localhost:5000/api/topics';
