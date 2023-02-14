@@ -39,8 +39,10 @@ export default class TopicList extends React.Component {
 
   render() {
     return (
+      <div>
+      <Share/>
       <ul className="toto">
-        <Share/>
+        
         {
           this.state.topics
             .map(topic =>
@@ -48,6 +50,7 @@ export default class TopicList extends React.Component {
             )
         }
       </ul>
+      </div>
     )
   }
 }

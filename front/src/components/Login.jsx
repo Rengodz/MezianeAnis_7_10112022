@@ -49,6 +49,8 @@ const Login = () => {
             );
             localStorage.setItem('accessToken', response?.data.token);
             setSuccess(true);
+            localStorage.setItem('userId', response?.data.id);
+            setSuccess(true);
             //clear state and controlled inputs
             //need value attrib on inputs for this
             setUser('');

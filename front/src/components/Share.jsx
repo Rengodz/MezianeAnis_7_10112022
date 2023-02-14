@@ -2,33 +2,45 @@ import React from "react";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import "./Share.css";
+import TopicList from "./TopicList";
 
 const userImg = require('./fleur.jpg');
 const accessToken = localStorage.getItem('accessToken');
-const Share = () => {
-    const [posts, setPosts] = useState([]);
-    const [title, setTitle] = useState('');
-    const [body, setBody] = useState('');
+const userId = localStorage.getItem('userId');
 
-const POST_URL = 'http://localhost:5000/api/topics';
-const handleSubmit = async (e) => {
+
+const Share = () => {
+    const [topic, setTopic] = useState([]);
+    const [userId, setUser ] = useState('');
+    const [topicText ,setTopicText ] = useState('');
+   
+    const POST_URL = 'http://localhost:5000/api/topics';
+
+    const handleSubmit = async (e) => {
     e.preventDefault();
         axios.post(POST_URL,
-            JSON.stringify({
-            title : title,
-            body: body,
-            }),
             {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer '+ accessToken },
+                topic:JSON.stringify({
+                    "userId": "",
+                    "topicText": "",
+                    "likes": "",
+                    "dislikes": "",
+                    "usersLiked": [],
+                    "usersDisliked":[]
+                    })
+            },
+            {
+                headers: { 'Authorization': 'Bearer '+ accessToken },
                 withCredentials: true
             },
         )
             
             .then((post) => {
-                setPosts((posts) => [post, ...posts]);
-                setTitle('');
-                setBody('');
+                setTopic((topic) => [topic]);
+                setUser ((userId));
+                
             })
+
             .catch((err) => {
                 console.log(err.message);
             });
@@ -42,10 +54,10 @@ const handleSubmit = async (e) => {
             <img className="shareProfileImg" src={userImg} alt="" />
 
             <form onSubmit={handleSubmit}>
-            <input 
+            <input type = "text"
               placeholder="Que voulez vous exprimer ?"
               className="shareInput"
-
+              onChange={(e) => setTopicText(e.target.value)}
             />
             </form>
           </div>

@@ -1,9 +1,11 @@
 .share {
+    color: black;
     width: 150%;
     height: 170px;
     border-radius: 10px;
     -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
     box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    margin-bottom: 50px;
   }
   
   .shareWrapper {
