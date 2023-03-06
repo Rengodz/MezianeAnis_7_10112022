@@ -172,8 +172,8 @@ const Register = () => {
                     <p>
                         Vous avez déja un compte ?<br />
                         <span className="line">
-                            {/*put router link here*/}
-                            <a href="login">Se connecter</a>
+                      
+                        <Link to="/login">Se connecter</Link>
 
 
                         </span>

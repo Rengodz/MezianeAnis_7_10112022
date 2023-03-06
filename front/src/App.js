@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Route , Switch} from "react-router-dom";
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -10,11 +10,27 @@ function App() {
   return (
     <main className="App">
       <Header />
-      <Routes>
-      <Route path="/" element={<Register />}></Route>
-      <Route path="login" element={<Login />}></Route>
-      <Route path="topic" element={<TopicList />}></Route>
-      </Routes>
+
+      <Switch>
+
+      <Route exact path="/">
+
+       <Register />
+
+       </Route>
+
+      <Route path="/login">
+
+       <Login />
+
+       </Route>
+
+      <Route path="/topic">
+        <TopicList />
+        </Route>
+
+      </Switch>
+      
       <Footer />
       
     </main>

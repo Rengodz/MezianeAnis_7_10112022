@@ -1,8 +1,7 @@
-import { useRef, useState, useEffect } from "react";
-import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect } from "react";
+import { faCheck, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { browserHistory, Router, Route } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 const USER_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -11,35 +10,24 @@ const LOGIN_URL = 'http://localhost:5000/api/auth/login';
 
 const Login = () => {
     
-    const userRef = useRef();
-    const errRef = useRef();
+    const history = useHistory();
 
-    const [email, setUser] = useState('');
-    const [validName, setValidName] = useState(false);
-    const [userFocus, setUserFocus] = useState(false);
-
-    const [password, setPwd] = useState('');
-    const [validPwd, setValidPwd] = useState(false);
-    const [pwdFocus, setPwdFocus] = useState(false);
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
-    useEffect(() => {
-        userRef.current.focus();
-    }, [])
+    const isValidEmail = USER_REGEX.test(email);
+    const isValidPassword = PWD_REGEX.test(password);
 
     useEffect(() => {
-        setValidName(USER_REGEX.test(email));
-    }, [email])
-
-
-    useEffect(() => {
-        setErrMsg('');
-    }, [email, password])
+        setEmail('');
+        setPassword('');
+    }, [success])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        try {
             const response = await axios.post(LOGIN_URL,
                 JSON.stringify({ email, password }),
                 {
@@ -48,77 +36,63 @@ const Login = () => {
                 }
             );
             localStorage.setItem('accessToken', response?.data.token);
-            setSuccess(true);
             localStorage.setItem('userId', response?.data.id);
             setSuccess(true);
-            //clear state and controlled inputs
-            //need value attrib on inputs for this
-            setUser('');
-            setPwd('');
-        
+        } catch (error) {
+            setErrMsg('Failed to login. Please try again.');
+        }
     }
 
+    useEffect(() => {
+        if (success) {
+            // Redirect to the topics page if login is successful
+            history.push('/topics');
+        }
+    }, [success, history])
+
     return (
-        <>
-            {success ? (
-                <section>
-                    <h1>Réussi !</h1>
-                    <p>
-                        <a href="topic">Acceder aux topics</a>
-                    </p>
-                </section>
-                
-
-            ) : (
-                <section>
-                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Bienvenue</h1>
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="username">
-                            Email:
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            ref={userRef}
-                            autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
-                            value={email}
-                            required
-                            aria-invalid={validName ? "false" : "true"}
-                            aria-describedby="uidnote"
-                            onFocus={() => setUserFocus(true)}
-                            onBlur={() => setUserFocus(false)}
-                        />
-                        <p id="uidnote" className={userFocus && password && !validName ? "instructions" : "offscreen"}>
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                            4 a 24 caractères.<br />
-                        </p>
-
-
-                        <label htmlFor="password">
-                            Mot de passe:
-                            <FontAwesomeIcon icon={faCheck} className={validPwd ? "valid" : "hide"} />
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            onChange={(e) => setPwd(e.target.value)}
-                            value={password}
-                            required
-                            aria-invalid={validPwd ? "false" : "true"}
-                            aria-describedby="pwdnote"
-                            onFocus={() => setPwdFocus(true)}
-                            onBlur={() => setPwdFocus(false)}
-                        />
-
-                        <button>Se connecter</button>
-                    </form>
-                
-                </section>
-            )}
-        </>
-    )
+        <section>
+            {errMsg && <p className="errmsg" aria-live="assertive">{errMsg}</p>}
+            <h1>Bienvenue</h1>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="username">
+                    Email:
+                </label>
+                <input
+                    type="text"
+                    id="username"
+                    autoComplete="off"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    required
+                    aria-invalid={!isValidEmail}
+                    aria-describedby="uidnote"
+                />
+                <p id="uidnote" className={!isValidEmail ? "instructions" : "offscreen"}>
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                    4 a 24 caractères.<br />
+                </p>
+                <label htmlFor="password">
+                    Mot de passe:
+                    {isValidPassword && <FontAwesomeIcon icon={faCheck} className="valid" />}
+                </label>
+                <input
+                    type="password"
+                    id="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                    required
+                    aria-invalid={!isValidPassword}
+                    aria-describedby="pwdnote"
+                />
+                <p id="pwdnote" className={!isValidPassword ? "instructions" : "offscreen"}>
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                    Au moins 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.<br />
+                </p>
+                <button>Se connecter</button>
+            </form>
+        </section>
+    );
 }
 
-export default Login
+export default Login;

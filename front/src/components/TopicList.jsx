@@ -1,57 +1,51 @@
-import React from 'react';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 import Share from './Share';
-import Post from './Post';
-import { useEffect, useState } from "react";
 
 const TOPICS_URL = 'http://localhost:5000/api/topics';
-
 const accessToken = localStorage.getItem('accessToken');
 
-console.log(accessToken);
+const TopicList = () => {
+  const [topics, setTopics] = useState([]);
+  console.log("Fetching data...");
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(TOPICS_URL, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setTopics(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  useEffect(() => {
+    console.log("Fetching data...");
+    fetchData();
+  }, []);
 
+  const handleAddTopic = (newTopic) => {
+    setTopics([...topics, newTopic]);
+  };
 
-export default class TopicList extends React.Component {
-  state = {
-    topics: []
-  }
-  
-  
-  componentDidMount() {
-  
-    const instance = axios.create({
-      baseURL: 'http://localhost:5000/api/',
-      timeout: 1000,
-      headers: {'Authorization': 'Bearer '+ accessToken}
-    
-    });
+  console.log(topics);
 
-    instance.get(TOPICS_URL)
-    .then(response => {
-      const topics = response.data;
-      console.log(topics);
-      this.setState({ topics });
-    })
-
-  }
-
-
-  render() {
-    return (
-      <div>
-      <Share/>
-      <ul className="toto">
-        
-        {
-          this.state.topics
-            .map(topic =>
-              <li key={topic._id}>{topic.topicText}</li>
-            )
-        }
+  return (
+    <div>
+      <Share onAddTopic={handleAddTopic} />
+      <ul>
+        {topics.map((topic) => (
+          <li key={topic._id}>{topic.topicText}</li>
+        ))}
       </ul>
-      </div>
-    )
-  }
-}
+    </div>
+  );
+};
+
+export default TopicList;
+
+
+
 
