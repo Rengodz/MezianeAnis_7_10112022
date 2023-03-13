@@ -43,7 +43,7 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic }) => {
   };
 
   return (
-    <li>
+    <li className='postCard'>
       <h3>{topic.topicText}</h3>
       <p>{topic.imageUrl}</p>
       <span hidden><p>{topic._id}</p></span>

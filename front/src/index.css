@@ -151,4 +151,11 @@ img {
     border-radius : 50%; 
  }
  
- 
+ .postCard {
+    list-style: none;
+    background-color:#FFD7D7;
+    border-width: 3px ;
+    border-style:groove;
+    margin-bottom: 10px;
+    padding: 5px;
+ }
