@@ -25,7 +25,7 @@ function App() {
 
        </Route>
 
-      <Route path="/topic">
+      <Route path="/topics">
         <TopicList />
         </Route>
 

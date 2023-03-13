@@ -35,8 +35,9 @@ const Login = () => {
                     withCredentials: true
                 }
             );
+            console.log("response?.data.id : " + response?.data.userId);
             localStorage.setItem('accessToken', response?.data.token);
-            localStorage.setItem('userId', response?.data.id);
+            localStorage.setItem('userId', response?.data.userId);
             setSuccess(true);
         } catch (error) {
             setErrMsg('Failed to login. Please try again.');

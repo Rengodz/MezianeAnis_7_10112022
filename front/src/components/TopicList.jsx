@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Share from './Share';
+import Topic from './Topic';
 
 const TOPICS_URL = 'http://localhost:5000/api/topics';
 const accessToken = localStorage.getItem('accessToken');
 
 const TopicList = () => {
   const [topics, setTopics] = useState([]);
-  console.log("Fetching data...");
+
   const fetchData = async () => {
     try {
       const response = await axios.get(TOPICS_URL, {
@@ -22,7 +23,6 @@ const TopicList = () => {
   };
 
   useEffect(() => {
-    console.log("Fetching data...");
     fetchData();
   }, []);
 
@@ -30,14 +30,16 @@ const TopicList = () => {
     setTopics([...topics, newTopic]);
   };
 
-  console.log(topics);
+  const handleRemoveTopic = (id) => {
+    setTopics(topics.filter((topic) => topic._id !== id));
+  };
 
   return (
     <div>
       <Share onAddTopic={handleAddTopic} />
       <ul>
         {topics.map((topic) => (
-          <li key={topic._id}>{topic.topicText}</li>
+          <Topic key={topic._id} topic={topic} onRemoveTopic={handleRemoveTopic} />
         ))}
       </ul>
     </div>
@@ -45,7 +47,3 @@ const TopicList = () => {
 };
 
 export default TopicList;
-
-
-
-
