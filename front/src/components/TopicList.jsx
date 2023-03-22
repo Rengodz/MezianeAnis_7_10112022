@@ -16,7 +16,10 @@ const TopicList = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      setTopics(response.data);
+      console.log('response data:', response.data);
+      const sortedTopics = response.data.sort((a, b) => new Date(b.creationDate) - new Date(a.creationDate));
+      console.log('sorted topics:', sortedTopics);
+      setTopics(sortedTopics);
     } catch (error) {
       console.log(error);
     }

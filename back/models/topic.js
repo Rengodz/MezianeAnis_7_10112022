@@ -9,6 +9,7 @@ const topicSchema = mongoose.Schema({
     dislikes: { type: Number, required: false },
     usersLiked: { type: Array, required: true },
     usersDisliked: { type: Array, required: true },
+    creationDate: {type: Date, default: Date.now},
 });
 
 module.exports = mongoose.model('topic', topicSchema);

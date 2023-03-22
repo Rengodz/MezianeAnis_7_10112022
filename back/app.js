@@ -9,6 +9,9 @@ const userRoutes = require('./routes/user');
 const topicRoutes = require('./routes/topic');
 
 const app = express();
+
+const upload = require('./multerconfig');
+
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 mongoose.connect(process.env.DB_CONFIG, {
@@ -30,7 +33,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
-app.use('/api/topics', topicRoutes);
+app.use('/api/topics', upload.single('imageUrl'), topicRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;

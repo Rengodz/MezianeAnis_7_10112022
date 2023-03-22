@@ -8,7 +8,7 @@ const Share = ({ onAddTopic }) => {
   const [formData, setFormData] = useState({
     userId: localStorage.getItem('userId'),
     topicText: '',
-    imageUrl: '',
+    imageUrl: null,
     comments: [],
     likes: 0,
     dislikes: 0,
@@ -16,26 +16,42 @@ const Share = ({ onAddTopic }) => {
     usersDisliked: [],
   });
 
+  const [topic, setTopic] = useState(null);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === 'imageUrl') {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.files[0]
+      });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        POST_URL,
-        formData,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          withCredentials: true,
+      const formDataWithImage = new FormData();
+      formDataWithImage.append('topicText', formData.topicText);
+      formDataWithImage.append('userId', formData.userId);
+      formDataWithImage.append('imageUrl', formData.imageUrl);
+
+      const response = await axios({
+        method: 'post',
+        url: POST_URL,
+        data: formDataWithImage,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data'
         }
-      );
+      });
+
       onAddTopic(response.data);
       setFormData({
-        ...formData,
+        userId: localStorage.getItem('userId'),
         topicText: '',
-        imageUrl: '',
+        imageUrl: null,
         comments: [],
         likes: 0,
         dislikes: 0,
@@ -46,28 +62,64 @@ const Share = ({ onAddTopic }) => {
       console.log(error);
     }
   };
-
+  
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+    try {
+      await axios.put(
+        `${POST_URL}/${topic._id}`,
+        {
+          topicText: formData.topicText,
+          imageUrl: formData.imageUrl,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      );
+      setFormData({
+        userId: localStorage.getItem('userId'),
+        topicText: '',
+        imageUrl: null,
+        comments: [],
+        likes: 0,
+        dislikes: 0,
+        usersLiked: [],
+        usersDisliked: [],
+      });
+      setTopic(null);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  };
+  
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
+      <form encType="multipart/form-data" onSubmit={handleSubmit}>
+        <textarea
           name="topicText"
           placeholder="Que voulez-vous exprimer ?"
           value={formData.topicText}
           onChange={handleChange}
         />
         <input
-          type="text"
+          type="file"
           name="imageUrl"
-          placeholder="Lien vers une image (optionnel)"
-          value={formData.imageUrl}
           onChange={handleChange}
         />
-        <button type="submit">Partager</button>
+        {topic ? (
+          <button type="submit" onClick={handleUpdate}>
+            Modifier
+          </button>
+        ) : (
+          <button type="submit">Partager</button>
+        )}
       </form>
     </div>
   );
 };
 
-export default Share;
+export default Share; 
+

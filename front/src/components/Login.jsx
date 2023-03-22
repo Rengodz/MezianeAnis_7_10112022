@@ -38,6 +38,8 @@ const Login = () => {
             console.log("response?.data.id : " + response?.data.userId);
             localStorage.setItem('accessToken', response?.data.token);
             localStorage.setItem('userId', response?.data.userId);
+            localStorage.setItem('email', response?.data.email);
+            localStorage.setItem('is_admin', response?.data.is_admin);
             setSuccess(true);
         } catch (error) {
             setErrMsg('Failed to login. Please try again.');

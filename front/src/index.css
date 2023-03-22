@@ -159,3 +159,10 @@ img {
     margin-bottom: 10px;
     padding: 5px;
  }
+
+ .postImg {
+    border-width: 3px ;
+    border-style:groove;
+    display: flex;
+    margin-left: 70px;
+ }

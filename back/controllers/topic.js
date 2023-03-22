@@ -2,17 +2,24 @@ const Topic = require('../models/topic');
 const User = require('../models/user');
 
 exports.createTopic = (req, res, next) => {
-
-    const topicObject = JSON.parse(req.body.topic);
-    console.log(topicObject);
-    delete topicObject._id;
-    const topic = new Topic({
-        ...topicObject,
-    });
-    topic.save()
-        .then(() => res.status(201).json({ message: "Topic created" }))
-        .catch((error) => res.status(400).json({ message: "Error occured when creating the topic : " + error }));
+  console.log(req.body);
+  console.log(req.file);
+  const topicObject = req.body;
+  delete topicObject._id;
+  const topic = new Topic({
+    ...topicObject,
+    imageUrl: req.file.filename // set the imageUrl to the path of the uploaded file
+  });
+  topic.save()
+    .then(createdTopic => {
+      res.status(201).json({
+        message: "Topic created",
+        topic: createdTopic
+      });
+    })
+    .catch((error) => res.status(400).json({ message: "Error occured when creating the topic : " + error }));
 };
+
 
 exports.getOneTopic = (req, res, next) => {
     Topic.findOne({

@@ -1,20 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useState } from "react";
 
 const DELETE_URL = 'http://localhost:5000/api/topics/';
-const UPDATE_URL = 'http://localhost:5000/api/topics/';
 
-const Topic = ({ topic, onRemoveTopic, onUpdateTopic }) => {
+const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
   const userId = localStorage.getItem('userId');
+  const email = localStorage.getItem('email');
+  const is_admin = localStorage.getItem('is_admin');
+  const [updatedImageUrl, setUpdatedImageUrl] = useState(topic.imageUrl);
 
-  const [like,setLike] = useState(topic.like)
-    const [isLiked,setIsLiked] = useState(false)
-  
-    const likeHandler =()=>{
-      setLike(isLiked ? like-1 : like+1)
-      setIsLiked(!isLiked)
+  const [like, setLike] = useState(topic.likes);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedTopicText, setUpdatedTopicText] = useState(topic.topicText);
+
+  const likeHandler = async () => {
+    try {
+      await axios.post(
+        `http://localhost:5000/api/topics/${topic._id}/like`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      );
+      setLike(isLiked ? like - 1 : like + 1);
+      setIsLiked(!isLiked);
+      onTopicLike(topic._id, !isLiked);
+      console.log('Topic liked:');
+    } catch (error) {
+      console.log(error);
     }
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -31,29 +49,56 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic }) => {
 
   const handleUpdate = async (id) => {
     try {
-      await axios.put(`${UPDATE_URL}${id}`, {
+      await axios.put(`http://localhost:5000/api/topics/${id}`, {
+        topicText: updatedTopicText,
+        imageUrl: updatedImageUrl
+      }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       });
-      onUpdateTopic(id);
+      console.log('Topic updated:');
+      onUpdateTopic(id, updatedTopicText, updatedImageUrl);
+      setIsEditing(false); // This line will remove the editing UI after the update is complete
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleCancelUpdate = () => {
+    setUpdatedTopicText(topic.topicText);
+    setIsEditing(false);
+  };
+
   return (
     <li className='postCard'>
-      <h3>{topic.topicText}</h3>
-      <p>{topic.imageUrl}</p>
-      <span hidden><p>{topic._id}</p></span>
-      <button onClick={() => likeHandler (topic.id)}>Like</button>
-      {/* Add additional markup here to display other properties of the topic */}
-      {userId === topic.userId && (
+      <h3>{topic.userId}</h3>
+      <h4>Date de création: {topic.creationDate}</h4>
+      {isEditing ? (
+        <textarea
+          value={updatedTopicText}
+          onChange={(e) => setUpdatedTopicText(e.target.value)}
+        />
+      ) : (
+        <p>{topic.topicText}</p>
+      )}
+      {topic.imageUrl && (
+        <img className='postImg' src={`uploads/${topic.imageUrl}`} alt='topic image' />
+      )}
+      <p>Likes: {like}</p>
+      {((userId === topic.userId) || (is_admin === 'true')) && (
         <button onClick={() => handleDelete(topic._id)}>Supprimer</button>
       )}
-      {userId === topic.userId && (
-        <button onClick={() => handleUpdate(topic._id)}>Modifier</button>
+      {userId === topic.userId && !isEditing && (
+        <button onClick={() => setIsEditing(true)}>Modifier</button>
+      )}
+      {isEditing ? (
+        <>
+          <button onClick={() => handleUpdate(topic._id)}>Enregistrer</button>
+          <button onClick={handleCancelUpdate}>Annuler</button>
+        </>
+      ) : (
+        <button onClick={() => likeHandler(topic._id)}>Like</button>
       )}
     </li>
   );
