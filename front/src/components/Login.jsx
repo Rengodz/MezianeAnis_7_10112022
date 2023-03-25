@@ -20,6 +20,8 @@ const Login = () => {
     const isValidEmail = USER_REGEX.test(email);
     const isValidPassword = PWD_REGEX.test(password);
 
+    const [loggedIn, setLoggedIn] = useState(false);
+
     useEffect(() => {
         setEmail('');
         setPassword('');
@@ -40,6 +42,7 @@ const Login = () => {
             localStorage.setItem('userId', response?.data.userId);
             localStorage.setItem('email', response?.data.email);
             localStorage.setItem('is_admin', response?.data.is_admin);
+            setLoggedIn(true);
             setSuccess(true);
         } catch (error) {
             setErrMsg('Failed to login. Please try again.');
@@ -52,6 +55,7 @@ const Login = () => {
             history.push('/topics');
         }
     }, [success, history])
+    
 
     return (
         <section>

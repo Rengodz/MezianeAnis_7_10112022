@@ -1,5 +1,5 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -10,6 +10,14 @@ import Profil from './components/Profil';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      setLoggedIn(true);
+    }
+  }, []);
+
 
   return (
     <main className="App">
