@@ -73,7 +73,7 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
   return (
     <li className='postCard'>
       <h3>{topic.userId}</h3>
-      <h4>Date de création: {topic.creationDate}</h4>
+      <p className='datecr'>Date du post: {topic.creationDate}</p>
       {isEditing ? (
         <textarea
           value={updatedTopicText}

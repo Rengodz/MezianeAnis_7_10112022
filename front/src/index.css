@@ -164,5 +164,9 @@ img {
     border-width: 3px ;
     border-style:groove;
     display: flex;
-    margin-left: 70px;
+    margin-left: 25px;
+ }
+
+ .datecr {
+    font-size: 0.5em;
  }

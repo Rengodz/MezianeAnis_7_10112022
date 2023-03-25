@@ -8,7 +8,7 @@ const Share = ({ onAddTopic }) => {
   const [formData, setFormData] = useState({
     userId: localStorage.getItem('userId'),
     topicText: '',
-    imageUrl: null,
+    imageUrl: undefined, // make imageUrl optional
     comments: [],
     likes: 0,
     dislikes: 0,
@@ -20,9 +20,11 @@ const Share = ({ onAddTopic }) => {
 
   const handleChange = (e) => {
     if (e.target.name === 'imageUrl') {
+      // check if imageUrl value is undefined or if user selected a file
+      const imageUrl = e.target.files.length > 0 ? e.target.files[0] : undefined;
       setFormData({
         ...formData,
-        [e.target.name]: e.target.files[0]
+        imageUrl, // set the value accordingly
       });
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,7 +37,10 @@ const Share = ({ onAddTopic }) => {
       const formDataWithImage = new FormData();
       formDataWithImage.append('topicText', formData.topicText);
       formDataWithImage.append('userId', formData.userId);
-      formDataWithImage.append('imageUrl', formData.imageUrl);
+      if (formData.imageUrl) { // check if imageUrl value is defined
+        formDataWithImage.append('imageUrl', formData.imageUrl);
+        window.location.reload();
+      }
 
       const response = await axios({
         method: 'post',
@@ -51,7 +56,7 @@ const Share = ({ onAddTopic }) => {
       setFormData({
         userId: localStorage.getItem('userId'),
         topicText: '',
-        imageUrl: null,
+        imageUrl: undefined, // set imageUrl value to undefined
         comments: [],
         likes: 0,
         dislikes: 0,
@@ -81,7 +86,7 @@ const Share = ({ onAddTopic }) => {
       setFormData({
         userId: localStorage.getItem('userId'),
         topicText: '',
-        imageUrl: null,
+        imageUrl: undefined, // set imageUrl value to undefined
         comments: [],
         likes: 0,
         dislikes: 0,
