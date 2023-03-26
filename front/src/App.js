@@ -32,7 +32,7 @@ function App() {
         </Route>
 
         <Route path="/login">
-          <Login setLoggedIn={setLoggedIn} />
+          <Login />
         </Route>
 
         <Route path="/topics">

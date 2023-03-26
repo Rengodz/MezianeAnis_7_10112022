@@ -59,7 +59,8 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
       });
       console.log('Topic updated:');
       onUpdateTopic(id, updatedTopicText, updatedImageUrl);
-      setIsEditing(false); // This line will remove the editing UI after the update is complete
+      setIsEditing(false); 
+      setUpdatedImageUrl(false);// This line will remove the editing UI after the update is complete
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +73,7 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
 
   return (
     <li className='postCard'>
-      <h3>{topic.userId}</h3>
+      <h3>{topic.email}</h3>
       <p className='datecr'>Date du post: {topic.creationDate}</p>
       {isEditing ? (
         <textarea

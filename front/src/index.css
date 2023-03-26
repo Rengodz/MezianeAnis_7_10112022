@@ -156,7 +156,8 @@ img {
     background-color:#FFD7D7;
     border-width: 3px ;
     border-style:groove;
-    margin-bottom: 10px;
+    border-radius: 2%;
+    margin-bottom: 20px;
     padding: 5px;
  }
 
@@ -164,7 +165,6 @@ img {
     border-width: 3px ;
     border-style:groove;
     display: flex;
-    margin-left: 22px;
  }
 
  .datecr {
