@@ -94,6 +94,11 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
       )}
       {isEditing ? (
         <>
+        <input
+          type="file"
+          name="imageUrl"
+          onChange={handleUpdate}
+        />
           <button onClick={() => handleUpdate(topic._id)}>Enregistrer</button>
           <button onClick={handleCancelUpdate}>Annuler</button>
         </>

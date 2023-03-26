@@ -7,6 +7,7 @@ const accessToken = localStorage.getItem('accessToken');
 const Share = ({ onAddTopic }) => {
   const [formData, setFormData] = useState({
     userId: localStorage.getItem('userId'),
+    email:localStorage.getItem('email'),
     topicText: '',
     imageUrl: undefined, // make imageUrl optional
     comments: [],
@@ -36,7 +37,7 @@ const Share = ({ onAddTopic }) => {
     try {
       const formDataWithImage = new FormData();
       formDataWithImage.append('topicText', formData.topicText);
-      formDataWithImage.append('userId', formData.userId);
+      formDataWithImage.append('email', formData.email);
       if (formData.imageUrl) { // check if imageUrl value is defined
         formDataWithImage.append('imageUrl', formData.imageUrl);
         window.location.reload();
@@ -55,6 +56,7 @@ const Share = ({ onAddTopic }) => {
       onAddTopic(response.data);
       setFormData({
         userId: localStorage.getItem('userId'),
+        email:localStorage.getItem('email'),
         topicText: '',
         imageUrl: undefined, // set imageUrl value to undefined
         comments: [],
@@ -85,6 +87,7 @@ const Share = ({ onAddTopic }) => {
       );
       setFormData({
         userId: localStorage.getItem('userId'),
+        email: localStorage.getItem('email'),
         topicText: '',
         imageUrl: undefined, // set imageUrl value to undefined
         comments: [],
