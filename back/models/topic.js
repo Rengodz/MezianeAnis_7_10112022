@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const topicSchema = mongoose.Schema({
     userId: { type: String, required: true },
+    email: {type: String, required: true},
     topicText: { type: String, required: true },
     imageUrl: { type: String, required: false },
     comments: { type: Array, required: false },

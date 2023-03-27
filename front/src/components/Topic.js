@@ -17,7 +17,7 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
   const likeHandler = async () => {
     try {
       await axios.post(
-        `http://localhost:5000/api/topics/${topic._id}/like`,
+        `http://localhost:5000/api/topics/${topic._id}/likes`,
         {},
         {
           headers: {
