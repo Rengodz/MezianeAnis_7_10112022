@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Share from './Share';
@@ -50,7 +51,7 @@ const TopicList = () => {
       <ul>
         {topics.map((topic) => (
           <Topic
-            key={topic._id}
+            key={uuidv4()}
             topic={topic}
             onRemoveTopic={handleRemoveTopic}
             onUpdateTopic={handleUpdateTopic}
