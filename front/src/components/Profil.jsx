@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const DELETE_URL = 'http://localhost:5000/api/user/';
+const DELETE_URL = 'http://localhost:5000/api/auth/';
 const email = localStorage.getItem('email');
+const userId = localStorage.getItem('userId');
 
 function Profil({ user, onLogout }) {
   const [deleting, setDeleting] = useState(false);
@@ -11,9 +12,14 @@ function Profil({ user, onLogout }) {
     if (window.confirm("Etes vous sûr de vouloir supprimer vôtre compte ?")) {
       try {
         setDeleting(true);
-        await axios.delete(`${DELETE_URL}${user.id}`);
+        const config = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }
+        await axios.delete(`http://localhost:5000/api/auth/${userId}`, config);
         setDeleting(false);
-        onLogout(); // call the onLogout callback prop to log out the user
+        localStorage.clear(); // call the onLogout callback prop to log out the user
       } catch (error) {
         console.error(error);
         setDeleting(false);
@@ -21,6 +27,7 @@ function Profil({ user, onLogout }) {
       }
     }
   };
+  
 
   return (
     <div>
