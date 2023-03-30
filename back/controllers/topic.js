@@ -2,8 +2,6 @@ const Topic = require('../models/topic');
 const User = require('../models/user');
 
 exports.createTopic = (req, res, next) => {
-  console.log(req.body);
-  console.log(req.file);
   const topicObject = req.body;
   delete topicObject._id;
   const topic = new Topic({
@@ -38,24 +36,20 @@ exports.getOneTopic = (req, res, next) => {
 };
 
 exports.modifyTopic = (req, res, next) => {
-    const topic = new Topic({
-        _id: req.params.id,
-        topicText: req.body.name,
-        userId: req.body.userId
+  const topic = {
+    _id: req.params.id,
+    topicText: req.body.topicText,
+    imageUrl: req.body.imageUrl,
+  };
+  Topic.findByIdAndUpdate(req.params.id, topic, { new: true })
+    .then((updatedTopic) => {
+      res.status(200).json(updatedTopic);
+    })
+    .catch((error) => {
+      res.status(400).json({
+        error: error,
+      });
     });
-    Topic.updateOne({ _id: req.params.id }, topic).then(
-        () => {
-            res.status(201).json({
-                message: 'Topic updated successfully!'
-            });
-        }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );
 };
 
 exports.deleteTopic = (req, res, next) => {
@@ -115,57 +109,75 @@ exports.addComment = (req, res, next) => {
 }
 
 
-// like fonction
 exports.likeTopic = (req, res, next) => {
-    let userId = req.body.userId;
-    let topicId = req.params.id;
-    let like = req.body.like;
+  let userId = req.body.userId;
+  let topicId = req.params.id;
+  let like = req.body.like;
 
-    //  us ID on 'usersLiked' and 'likes'
-
-    if (like === 1) {
-        Topic.updateOne({ _id: topicId }, {
-                $push: { usersLiked: userId },
-                $inc: { likes: +1 },
+  if (like === 1) {
+    Topic.updateOne(
+      { _id: topicId },
+      {
+        $push: { usersLiked: userId },
+        $inc: { likes: 1 },
+      }
+    )
+      .then(() => {
+        Topic.findById(topicId)
+          .then((updatedTopic) =>
+            res.status(200).json({ message: "L'utilisateur like le topic", topic: updatedTopic })
+          )
+          .catch((error) => res.status(400).json({ message: "Error occured when fetching the updated topic : " + error }));
+      })
+      .catch((error) => res.status(400).json({ message: "Error occured when updating the topic : " + error }));
+  } else if (like === -1) {
+    Topic.updateOne(
+      { _id: topicId },
+      {
+        $push: { usersDisliked: userId },
+        $inc: { dislikes: 1 },
+      }
+    )
+      .then(() => {
+        Topic.findById(topicId)
+          .then((updatedTopic) =>
+            res.status(200).json({ message: "L'utilisateur dislike le topic", topic: updatedTopic })
+          )
+          .catch((error) => res.status(400).json({ message: "Error occured when fetching the updated topic : " + error }));
+      })
+      .catch((error) => res.status(400).json({ error }));
+  } else if (like === 0) {
+    Topic.findOne({ _id: topicId })
+      .then((topic) => {
+        if (topic.usersLiked.includes(userId)) {
+          Topic.updateOne(
+            { _id: topicId },
+            { $pull: { usersLiked: userId }, $inc: { likes: -1 } }
+          )
+            .then(() => {
+              Topic.findById(topicId)
+                .then((updatedTopic) =>
+                  res.status(200).json({ message: "L'utilisateur a retiré son like", topic: updatedTopic })
+                )
+                .catch((error) => res.status(400).json({ message: "Error occured when fetching the updated topic : " + error }));
             })
-            .then(() =>
-                res.status(200).json({ message: "L'utilisateur like le topic" })
-            )
             .catch((error) => res.status(400).json({ message: "Error occured when updating the topic : " + error }));
-
-
-        //  dislike 
-    } else if (like === -1) {
-        Topic.updateOne({ _id: topicId }, {
-                $push: { usersDisliked: userId },
-                $inc: { dislikes: +1 },
+        }
+        if (topic.usersDisliked.includes(userId)) {
+          Topic.updateOne(
+            { _id: topicId },
+            { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } }
+          )
+            .then(() => {
+              Topic.findById(topicId)
+                .then((updatedTopic) =>
+                  res.status(200).json({ message: "L'utilisateur a retiré son dislike", topic: updatedTopic })
+                )
+                .catch((error) => res.status(400).json({ message: "Error occured when fetching the updated topic : " + error }));
             })
-            .then(() =>
-                res.status(200).json({ message: "L'utilisateur dislike le topic" })
-            )
-            .catch((error) => res.status(400).json({ error }));
-
-
-        //  update like/dislike with include
-
-    } else if (like === 0) {
-        Topic.findOne({ _id: topicId })
-            .then((topic) => {
-                if (topic.usersLiked.includes(userId)) {
-                    Topic.updateOne({ _id: topicId }, { $pull: { usersLiked: userId }, $inc: { likes: -1 } })
-                        .then(() =>
-                            res.status(200).json({ message: "L'utilisateur a retiré son like" })
-                        )
-                        .catch((error) => res.status(400).json({ message: "Error occured when updating the topic : " + error }));
-                }
-                if (topic.usersDisliked.includes(userId)) {
-                    Topic.updateOne({ _id: topicId }, { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } })
-                        .then(() =>
-                            res.status(200).json({ message: "L'utilisateur a retiré son dislike" })
-                        )
-                        .catch((error) => res.status(400).json({ message: "Error occured when updating the topic : " + error }));
-                }
-            })
-            .catch((error) => res.status(400).json({ error }));
-    }
-}
+            .catch((error) => res.status(400).json({ message: "Error occured when updating the topic : " + error }));
+        }
+      })
+      .catch((error) => res.status(400).json({ error }));
+  }
+};

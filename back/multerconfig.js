@@ -22,6 +22,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+console.log("storage:"+storage);
 // Set up multer middleware
 const upload = multer({
   storage,

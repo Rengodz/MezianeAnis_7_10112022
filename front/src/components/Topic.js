@@ -7,28 +7,35 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
   const userId = localStorage.getItem('userId');
   const email = localStorage.getItem('email');
   const is_admin = localStorage.getItem('is_admin');
-  const [updatedImageUrl, setUpdatedImageUrl] = useState(topic.imageUrl);
 
+  const [updatedImageUrl, setUpdatedImageUrl] = useState(topic.imageUrl);
   const [like, setLike] = useState(topic.likes);
   const [isLiked, setIsLiked] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedTopicText, setUpdatedTopicText] = useState(topic.topicText);
+  const [updatedTopic, setTopic] = useState(topic); // Define the state variable for updated topic
 
   const likeHandler = async () => {
     try {
-      await axios.post(
-        `http://localhost:5000/api/topics/${topic._id}/likes`,
-        {},
+      const response = await axios.post(
+        `http://localhost:5000/api/topics/${topic._id}/like`,
+        { like: isLiked ? 0 : 1 }, // send the like status to the server (like=1, dislike=-1, unlike=0)
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
         }
       );
-      setLike(isLiked ? like - 1 : like + 1);
-      setIsLiked(!isLiked);
-      onTopicLike(topic._id, !isLiked);
-      console.log('Topic liked:');
+      const updatedTopic = response?.data?.topic;
+      if (updatedTopic) {
+        setLike(updatedTopic.likes);
+        setIsLiked(!isLiked);
+        onTopicLike(updatedTopic._id, !isLiked);
+        setTopic(updatedTopic); // update the topic with the updated likes count
+        console.log('Topic liked:', updatedTopic);
+      } else {
+        console.log('Error updating topic:', response.data);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -49,18 +56,21 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
 
   const handleUpdate = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/topics/${id}`, {
-        topicText: updatedTopicText,
-        imageUrl: updatedImageUrl
-      }, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      const response = await axios.put(
+        `http://localhost:5000/api/topics/${id}`,
+        {
+          topicText: updatedTopicText,
+          imageUrl: updatedImageUrl,
         },
-      });
-      console.log('Topic updated:');
-      onUpdateTopic(id, updatedTopicText, updatedImageUrl);
-      setIsEditing(false); 
-      setUpdatedImageUrl(false);// This line will remove the editing UI after the update is complete
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        }
+      );
+      console.log('Topic updated:', response.data);
+      onUpdateTopic(response.data); // include the updated topic data in this function call
+      setIsEditing(false);
     } catch (error) {
       console.log(error);
     }
@@ -111,3 +121,5 @@ const Topic = ({ topic, onRemoveTopic, onUpdateTopic, onTopicLike }) => {
 };
 
 export default Topic;
+
+

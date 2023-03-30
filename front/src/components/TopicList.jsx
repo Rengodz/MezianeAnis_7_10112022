@@ -37,12 +37,24 @@ const TopicList = () => {
     setTopics(topics.filter((topic) => topic._id !== id));
   };
 
+  const handleUpdateTopic = (updatedTopic) => {
+    const updatedTopics = topics.map((topic) =>
+      topic._id === updatedTopic._id ? updatedTopic : topic
+    );
+    setTopics(updatedTopics);
+  };
+
   return (
     <div>
       <Share onAddTopic={handleAddTopic} />
       <ul>
         {topics.map((topic) => (
-          <Topic key={topic._id} topic={topic} onRemoveTopic={handleRemoveTopic} />
+          <Topic
+            key={topic._id}
+            topic={topic}
+            onRemoveTopic={handleRemoveTopic}
+            onUpdateTopic={handleUpdateTopic}
+          />
         ))}
       </ul>
     </div>

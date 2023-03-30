@@ -6,10 +6,10 @@ const topicSchema = mongoose.Schema({
     topicText: { type: String, required: true },
     imageUrl: { type: String, required: false },
     comments: { type: Array, required: false },
-    likes: { type: Number, required: false },
-    dislikes: { type: Number, required: false },
-    usersLiked: { type: Array, required: true },
-    usersDisliked: { type: Array, required: true },
+    likes: { type: Number, required: false, default: 0},
+    dislikes: { type: Number, required: false, default: 0 },
+    usersLiked: { type: Array, required: false },
+    usersDisliked: { type: Array, required: false },
     creationDate: {type: Date, default: Date.now},
 });
 
