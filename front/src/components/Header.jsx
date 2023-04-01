@@ -4,10 +4,10 @@ import { Link, useLocation } from "react-router-dom"
 import colors from '../Utils/variables'
 
 
-const logo = require('./logo.png');
-const userIcon = require('./user.png');
-const homeIcon = require('./home.png');
-const logoutIcon = require('./logout.png');
+const logo = require('./icons/logo.png');
+const userIcon = require('./icons/user.png');
+const homeIcon = require('./icons/home.png');
+const logoutIcon = require('./icons/logout.png');
 
 
 

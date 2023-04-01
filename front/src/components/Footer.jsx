@@ -16,8 +16,9 @@ const StyledP = styled.p`
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     font-size: 22px;
-    margin: 20px 0 30px 0;
+    margin: 80px 0 30px 0;
     color: white;
+    text-align: center;
 `
 
 export default function Footer() {
